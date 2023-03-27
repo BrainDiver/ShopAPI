@@ -11,7 +11,7 @@ class ProductSerializer(serializers.ModelSerializer):
 #but in this task  i want make my own serializer
 #based on the parrent class Serializer
 class CategorySerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    id = serializers.IntegerField(read_only= True)
     name = serializers.CharField(max_length=30)
 
     def create(self, validated_data):

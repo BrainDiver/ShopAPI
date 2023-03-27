@@ -6,13 +6,16 @@ from rest_framework.response import Response
 from rest_framework.settings import api_settings
 from .serializers import CategorySerializer,CategoryProductsSerializer, ProductSerializer
 from .models import Product, Category
+from .permissions import IsAdminOrReadOnly
 
 class ProductsListAPIView(generics.ListCreateAPIView):
     queryset= Product.objects.all()
     serializer_class= ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
 class ProductsDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset= Product.objects.all()
     serializer_class= ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
 #I can use default classes DRF and write class with 2 string, 
 #but in this task i want make my own class based 
 #on parent class APIView 
@@ -20,7 +23,8 @@ class CategoryListAPIView(APIView):
     queryset = Category.objects.all()
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     serializer_class = CategorySerializer
-    
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request):
         page = self.paginate_queryset(self.queryset)
         if page is not None:
@@ -41,15 +45,15 @@ class CategoryListAPIView(APIView):
     def get_paginated_response(self, data):
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
-    #def get(self, request, **kwargs,):
-        #return Response({'name': CategorySerializer(Category.objects.all(), many=True).data})
-#    def post(self, request):
- #       serializer= CategorySerializer(data=request.data)
-  #      serializer.is_valid(raise_exception= True)
-   #     serializer.save()
-    #    return Response({'name': serializer.data })
+
+    def post(self, request):
+        serializer= CategorySerializer(data=request.data)
+        serializer.is_valid(raise_exception= True)
+        serializer.save()
+        return Response({'name': serializer.data })
 
 class CategoryDetailAPIView(APIView):
+    permission_classes = [IsAdminOrReadOnly]
     def get(self, request, **kwargs):
         pk= kwargs.get('pk')
         if not pk:
