@@ -1,13 +1,20 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
-from .serializers import CategorySerializer,CategoryProductsSerializer, ProductSerializer
-from .models import Product, Category
+from .serializers import CategorySerializer,CategoryProductsSerializer, ProductSerializer, CostumerSerializer
+from .models import Product, Category, Costumer
 from .permissions import IsAdminOrReadOnly
 
+"""
+In this shopapi, I used three different methods for my simple ShopApi. (Viewset, default generics classes and classes inherited from parrent APIView
+"""
+class CostumerViewSet(viewsets.ModelViewSet):
+    queryset= Costumer.objects.all()
+    serializer_class= CostumerSerializer
+    permission_classes= [IsAdminOrReadOnly]
 class ProductsListAPIView(generics.ListCreateAPIView):
     queryset= Product.objects.all()
     serializer_class= ProductSerializer

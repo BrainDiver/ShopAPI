@@ -13,3 +13,11 @@ class Category(models.Model):
     
     def __str__(self):
         return self.name
+
+class Costumer(models.Model):
+    first_name = models.CharField(max_length = 20)
+    last_name = models.CharField(max_length = 20)
+    adress = models.TextField(max_length = 20)
+    
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name 
